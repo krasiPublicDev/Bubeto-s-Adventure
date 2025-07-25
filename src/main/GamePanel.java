@@ -1,5 +1,7 @@
-package Main;
+package main;
 
+
+import entity.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +12,7 @@ public class GamePanel extends JPanel implements Runnable {
     final int originalTitleSize = 32;
     final int scale = 1;
 
-    final int titleSize = originalTitleSize * scale;
+    public int titleSize = originalTitleSize * scale;
     final int maxScreenCol = 30;
     final int maxScreenRow = 46;
     final int screenWidth = titleSize * maxScreenRow;
@@ -20,6 +22,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     KeyHandler keyHandler = new KeyHandler();
     Thread gameThread;
+
+    Player player = new Player(this, keyHandler);
 
     //default player location
     int playerX = 100;
@@ -40,39 +44,6 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread.start();
     }
 
-//    @Override
-//    @SuppressWarnings("BusyWait")
-//    public void run() {
-//
-//        double drawInterval = (double) 1000000000 / fps;
-//        double nextDrawTime = System.nanoTime() + drawInterval;
-//        double remainingTime = 0;
-//
-//        while (gameThread != null) {
-//
-//            update();
-//
-//            repaint();// repaint calls paintComponent
-//
-//
-//            try {
-//                remainingTime = nextDrawTime - System.nanoTime();
-//                remainingTime = remainingTime / 1000000;
-//
-//                if (remainingTime < 0) {
-//                    remainingTime = 0;
-//                }
-//
-//                Thread.sleep((long) remainingTime);
-//
-//                nextDrawTime += drawInterval;
-//
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
-
     @Override
     @SuppressWarnings("BusyWait")
     public void run() {
@@ -81,19 +52,28 @@ public class GamePanel extends JPanel implements Runnable {
         double delta = 0;
         double previousTime = System.nanoTime();
         long currentTime;
+        long timer = 0;
+        int drawCount = 0;
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
 
             delta += (currentTime - previousTime) / drawInterval;
+            timer += (currentTime - previousTime);// if timer foes over a second draw count will be shown
             previousTime = currentTime;
 
             if (delta >= 1) {
-
                 update();
                 repaint();// repaint calls paintComponent
                 delta--;
+                drawCount++;
 
+            }
+
+            if(timer >= 1000000000){
+                System.out.println("FPS" + drawCount);
+                drawCount = 0;
+                timer = 0;
             }
 
             try {
@@ -105,16 +85,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-
-        if (keyHandler.upPressed) {
-            playerY -= playerSpeed;
-        } else if (keyHandler.downPressed) {
-            playerY += playerSpeed;
-        } else if (keyHandler.leftPressed) {
-            playerX -= playerSpeed;
-        } else if (keyHandler.rightPressed) {
-            playerX += playerSpeed;
-        }
+        player.update();
     }
 
     public void paintComponent(Graphics g) {
@@ -122,8 +93,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.WHITE);
-        g2.fillRect(playerX, playerY, titleSize, titleSize);
+        player.draw(g);
 
         g2.dispose();
 
