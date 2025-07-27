@@ -2,6 +2,7 @@ package main;
 
 
 import entity.Player;
+import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,14 +10,15 @@ import java.awt.*;
 public class GamePanel extends JPanel implements Runnable {
 
     //screen settings
-    final int originalTitleSize = 32;
-    final int scale = 1;
+    final int originalTileSize = 40 ;
+    final int scale = 2;
 
-    public int titleSize = originalTitleSize * scale;
-    final int maxScreenCol = 30;
-    final int maxScreenRow = 46;
-    final int screenWidth = titleSize * maxScreenRow;
-    final int screenHeight = titleSize * maxScreenCol;
+    public int tileSize = originalTileSize * scale;
+    public int playerSize = tileSize ;
+    final int maxScreenCol = 12;
+    final int maxScreenRow = 20;
+    final int screenWidth = tileSize * maxScreenRow;
+    final int screenHeight = tileSize * maxScreenCol;
 
     final int fps = 60;
 
@@ -25,11 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     Player player = new Player(this, keyHandler);
 
-    //default player location
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 5;
-
+    TileManager tileManager = new TileManager(this);
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -62,6 +60,7 @@ public class GamePanel extends JPanel implements Runnable {
             timer += (currentTime - previousTime);// if timer foes over a second draw count will be shown
             previousTime = currentTime;
 
+
             if (delta >= 1) {
                 update();
                 repaint();// repaint calls paintComponent
@@ -70,7 +69,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             }
 
-            if(timer >= 1000000000){
+            if (timer >= 1000000000) {
                 System.out.println("FPS" + drawCount);
                 drawCount = 0;
                 timer = 0;
@@ -88,12 +87,15 @@ public class GamePanel extends JPanel implements Runnable {
         player.update();
     }
 
-    public void paintComponent(Graphics g) {
+    @Override
+    public void paintComponent(Graphics g) {//called when repaint is invoked
 
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
+        tileManager.draw(g2);
         player.draw(g);
+
 
         g2.dispose();
 

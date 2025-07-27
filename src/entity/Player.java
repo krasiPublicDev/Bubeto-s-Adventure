@@ -84,12 +84,12 @@ public class Player extends Entity {
             lastDirection = direction;
 
             spriteCounter++;
-            if (spriteCounter > 20) {
+            if (spriteCounter > 18) {
                 spriteNumber = (spriteNumber == 1) ? 2 : 1;
                 spriteCounter = 0;
             }
         } else {
-            // ⬇️ Here’s the switch when not moving
+            // a switch for when not moving
             switch (lastDirection) {
                 case "up" -> direction = "upStatic";
                 case "down" -> direction = "downStatic";
@@ -97,7 +97,7 @@ public class Player extends Entity {
                 case "right" -> direction = "rightStatic";
             }
 
-            spriteNumber = 1; // Optional: keep idle image consistent
+            spriteNumber = 1; //keep idle image consistent
         }
     }
 
@@ -148,7 +148,7 @@ public class Player extends Entity {
 
         }
 
-        g2.drawImage(image, x, y, gamePanel.titleSize * 3, gamePanel.titleSize * 3, null);
+        g2.drawImage(image, x, y, gamePanel.playerSize, gamePanel.playerSize, null);
 
     }
 
