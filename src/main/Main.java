@@ -10,13 +10,14 @@ public class Main {
         window.setTitle("Bubeto's Adventure");
 
         GamePanel gamePanel = new GamePanel();
-        window.add(gamePanel);
+        window.add(gamePanel);//gives default frame settings;
 
-        window.pack();
+        window.pack(); //when pack is used the settings are implemented
 
         window.setLocationRelativeTo(null);
-        window.setVisible(true);
+        window.setVisible(true);//the image drawing starts here
 
+        gamePanel.requestFocusInWindow();
         gamePanel.startGameThread();
 
 

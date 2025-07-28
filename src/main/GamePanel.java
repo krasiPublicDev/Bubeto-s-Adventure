@@ -10,15 +10,15 @@ import java.awt.*;
 public class GamePanel extends JPanel implements Runnable {
 
     //screen settings
-    final int originalTileSize = 40 ;
+    final int originalTileSize = 40;
     final int scale = 2;
 
     public int tileSize = originalTileSize * scale;
-    public int playerSize = tileSize ;
-    final int maxScreenCol = 12;
-    final int maxScreenRow = 20;
-    final int screenWidth = tileSize * maxScreenRow;
-    final int screenHeight = tileSize * maxScreenCol;
+    public int playerSize = tileSize;
+    public final int maxScreenCol = 20;
+    public final int maxScreenRow = 12;
+    public final int screenWidth = tileSize * maxScreenCol;
+    public final int screenHeight = tileSize * maxScreenRow;
 
     final int fps = 60;
 
@@ -29,17 +29,17 @@ public class GamePanel extends JPanel implements Runnable {
 
     TileManager tileManager = new TileManager(this);
 
-    public GamePanel() {
+    public GamePanel() {// settings for frame dimensions
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
-        this.addKeyListener(keyHandler);
-        this.setFocusable(true);//focuses on the current map square
+        this.addKeyListener(keyHandler);//registers key listener
+        this.setFocusable(true);//focuses on the current map square and makes keys focusable
     }
 
     public void startGameThread() {
         gameThread = new Thread(this);
-        gameThread.start();
+        gameThread.start();//run method is called
     }
 
     @Override

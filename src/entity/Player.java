@@ -42,7 +42,7 @@ public class Player extends Entity {
 
             down1 = ImageIO.read(getClass().getResource("/player/Andy-11.png.png"));
             down2 = ImageIO.read(getClass().getResource("/player/Andy-10.png.png"));
-            down3 = ImageIO.read(getClass().getResource("/player/Andy-1.png.png"));
+            down3 = ImageIO.read(getClass().getResource("/player/Andynew-1.png"));
 
             left1 = ImageIO.read(getClass().getResource("/player/Andy-4.png.png"));
             left2 = ImageIO.read(getClass().getResource("/player/Andy-6.png.png"));
