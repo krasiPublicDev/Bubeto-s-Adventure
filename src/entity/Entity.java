@@ -8,7 +8,7 @@ public class Entity {
     public int speed;
 
     //everything with up 3 is stationary in a certain direction
-    public BufferedImage up1, up2, up3, down1, down2, down3, left1, left2, left3, right1, right3, right2;
+    public BufferedImage up1, up2, upStatic, down1, down2, downStatic, left1, left2, leftStatic, right1, right2, rightStatic;
     public String direction;
 
     public int spriteCounter = 0;

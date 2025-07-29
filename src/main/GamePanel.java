@@ -21,7 +21,6 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenHeight = tileSize * maxScreenRow;
 
     final int fps = 60;
-
     KeyHandler keyHandler = new KeyHandler();
     Thread gameThread;
 
@@ -66,11 +65,10 @@ public class GamePanel extends JPanel implements Runnable {
                 repaint();// repaint calls paintComponent
                 delta--;
                 drawCount++;
-
             }
 
             if (timer >= 1000000000) {
-                System.out.println("FPS" + drawCount);
+               System.out.println("FPS" + drawCount);
                 drawCount = 0;
                 timer = 0;
             }

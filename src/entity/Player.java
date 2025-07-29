@@ -7,13 +7,15 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class Player extends Entity {
 
     GamePanel gamePanel;
     KeyHandler keyHandler;
-
     private String lastDirection = "down";
+
+    private final LinkedList<String> directionQueue = new LinkedList<>();
 
 
     public Player(GamePanel gamePanel, KeyHandler keyHandler) {
@@ -36,21 +38,21 @@ public class Player extends Entity {
 
         try {
 
-            up1 = ImageIO.read(getClass().getResource("/player/Andy-9.png.png"));
-            up2 = ImageIO.read(getClass().getResource("/player/Andy-8.png.png"));
-            up3 = ImageIO.read(getClass().getResource("/player/Andy-7.png.png"));
+            up1 = ImageIO.read(getClass().getResource("/player/up1.png"));
+            up2 = ImageIO.read(getClass().getResource("/player/up2.png"));
+            upStatic = ImageIO.read(getClass().getResource("/player/upStatic.png"));
 
-            down1 = ImageIO.read(getClass().getResource("/player/Andy-11.png.png"));
-            down2 = ImageIO.read(getClass().getResource("/player/Andy-10.png.png"));
-            down3 = ImageIO.read(getClass().getResource("/player/Andynew-1.png"));
+            down1 = ImageIO.read(getClass().getResource("/player/doun1.png"));
+            down2 = ImageIO.read(getClass().getResource("/player/doun2.png"));
+            downStatic = ImageIO.read(getClass().getResource("/player/dounStatic.png"));
 
-            left1 = ImageIO.read(getClass().getResource("/player/Andy-4.png.png"));
-            left2 = ImageIO.read(getClass().getResource("/player/Andy-6.png.png"));
-            left3 = ImageIO.read(getClass().getResource("/player/Andy-7.static.png"));
+            left1 = ImageIO.read(getClass().getResource("/player/left1.png"));
+            left2 = ImageIO.read(getClass().getResource("/player/left2.png"));
+            leftStatic = ImageIO.read(getClass().getResource("/player/leftStatic.png"));
 
-            right1 = ImageIO.read(getClass().getResource("/player/Andy-3.png.png"));
-            right2 = ImageIO.read(getClass().getResource("/player/Andy-5.png.png"));
-            right3 = ImageIO.read(getClass().getResource("/player/Andy-8.static.png"));
+            right1 = ImageIO.read(getClass().getResource("/player/right1.png"));
+            right2 = ImageIO.read(getClass().getResource("/player/right2.png"));
+            rightStatic = ImageIO.read(getClass().getResource("/player/rightStatic.png"));
 
 
         } catch (IOException e) {
@@ -60,45 +62,60 @@ public class Player extends Entity {
     }
 
     public void update() {
+        String dir = keyHandler.getCurrentDirection();
         boolean isMoving = false;
 
-        if (keyHandler.upPressed) {
-            y -= speed;
-            direction = "up";
-            isMoving = true;
-        } else if (keyHandler.downPressed) {
-            y += speed;
-            direction = "down";
-            isMoving = true;
-        } else if (keyHandler.leftPressed) {
-            x -= speed;
-            direction = "left";
-            isMoving = true;
-        } else if (keyHandler.rightPressed) {
-            x += speed;
-            direction = "right";
-            isMoving = true;
-        }
-
-        if (isMoving) {
-            lastDirection = direction;
-
-            spriteCounter++;
-            if (spriteCounter > 18) {
-                spriteNumber = (spriteNumber == 1) ? 2 : 1;
-                spriteCounter = 0;
-            }
-        } else {
-            // a switch for when not moving
-            switch (lastDirection) {
-                case "up" -> direction = "upStatic";
-                case "down" -> direction = "downStatic";
-                case "left" -> direction = "leftStatic";
-                case "right" -> direction = "rightStatic";
+        if (dir != null) {
+            direction = dir;
+            switch (dir) {
+                case "up" -> {
+                    y -= speed;
+                    isMoving = true;
+                    lastDirection = "up";
+                }
+                case "down" -> {
+                    y += speed;
+                    isMoving = true;
+                }
+                case "left" -> {
+                    x -= speed;
+                    isMoving = true;
+                }
+                case "right" -> {
+                    x += speed;
+                    isMoving = true;
+                }
             }
 
-            spriteNumber = 1; //keep idle image consistent
-        }
+            if (isMoving) {
+                lastDirection = direction;
+
+                spriteCounter++;
+                if (spriteCounter > 18) {
+                    spriteNumber = (spriteNumber == 1) ? 2 : 1;
+                    spriteCounter = 0;
+                }
+            } else {
+                spriteNumber = 1; // idle sprite
+            }
+            } else {
+                switch (lastDirection) {
+                    case "up" -> direction = "upStatic";
+                    case "down" -> direction = "downStatic";
+                    case "left" -> direction = "leftStatic";
+                    case "right" -> direction = "rightStatic";
+                }
+                spriteNumber = 1;
+            }
+    }
+
+    public void pressDirection(String dir) {
+        directionQueue.remove(dir); // prevent duplicates
+        directionQueue.addFirst(dir); // newest has the hidghest priority
+    }
+
+    public void releaseDirection(String dir) {
+        directionQueue.remove(dir);
     }
 
     public void draw(Graphics g2) {
@@ -114,7 +131,7 @@ public class Player extends Entity {
                 }
             }
 
-            case "upStatic" -> image = up3;
+            case "upStatic" -> image = upStatic;
 
             case "down" -> {
                 if (spriteNumber == 1) {
@@ -124,7 +141,7 @@ public class Player extends Entity {
                 }
             }
 
-            case "downStatic" -> image = down3;
+            case "downStatic" -> image = downStatic;
 
             case "left" -> {
                 if (spriteNumber == 1) {
@@ -134,7 +151,7 @@ public class Player extends Entity {
                 }
             }
 
-            case "leftStatic" -> image = left3;
+            case "leftStatic" -> image = leftStatic;
 
             case "right" -> {
                 if (spriteNumber == 1) {
@@ -144,7 +161,7 @@ public class Player extends Entity {
                 }
             }
 
-            case "rightStatic" -> image = right3;
+            case "rightStatic" -> image = rightStatic;
 
         }
 

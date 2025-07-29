@@ -1,45 +1,39 @@
 package main;
 
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.util.LinkedList;
 
-public class KeyHandler implements KeyListener {
+public class KeyHandler extends KeyAdapter {
+    private final LinkedList<String> directionStack = new LinkedList<>();
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed;
-
-    @Override
-    public void keyTyped(KeyEvent e) {
+    public String getCurrentDirection() {
+        return directionStack.isEmpty() ? null : directionStack.getLast();
     }
+
 
     @Override
     public void keyPressed(KeyEvent e) {
-        int code = e.getKeyCode();
-
-        switch (code) {
-            case KeyEvent.VK_W -> upPressed = true;
-
-            case KeyEvent.VK_S -> downPressed = true;
-
-            case KeyEvent.VK_A -> leftPressed = true;
-
-            case KeyEvent.VK_D -> rightPressed = true;
+        String dir = keyToDirection(e.getKeyCode());
+        if (dir != null && !directionStack.contains(dir)) {
+            directionStack.add(dir);
         }
-
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        int code = e.getKeyCode();
+        String dir = keyToDirection(e.getKeyCode());
+        directionStack.remove(dir);
+    }
 
-        switch (code) {
-            case KeyEvent.VK_W -> upPressed = false;
-
-            case KeyEvent.VK_S -> downPressed = false;
-
-            case KeyEvent.VK_A -> leftPressed = false;
-
-            case KeyEvent.VK_D -> rightPressed = false;
-        }
-
+    private String keyToDirection(int keyCode) {
+        return switch (keyCode) {
+            case KeyEvent.VK_W -> "up";
+            case KeyEvent.VK_S -> "down";
+            case KeyEvent.VK_A -> "left";
+            case KeyEvent.VK_D -> "right";
+            default -> null;
+        };
     }
 }
+

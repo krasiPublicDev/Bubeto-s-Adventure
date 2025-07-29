@@ -1,6 +1,5 @@
 package tile;
 
-import jdk.jshell.ImportSnippet;
 import main.GamePanel;
 
 import javax.imageio.ImageIO;
@@ -9,20 +8,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.Array;
 
 public class TileManager {
 
     GamePanel gp;
     Tile[] tile;
-    int mapTileNumber[][];
+    int[][] mapTileNumber;
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
         tile = new Tile[10];
         getTileImage();
         mapTileNumber = new int[gp.maxScreenCol][gp.maxScreenRow];
-        loadMap("/maps/map1.txt");
+        loadMap("/maps/designed_grid_60x36.txt");
     }
 
     public void getTileImage() {
@@ -58,7 +56,7 @@ public class TileManager {
                 String line = bufferedReader.readLine();
 
                 while (col < gp.maxScreenCol) {
-                    String numbers[] = line.split(" ");
+                    String[] numbers = line.split(" ");
 
                     int num = Integer.parseInt(numbers[col]);
                     mapTileNumber[col][row] = num;
