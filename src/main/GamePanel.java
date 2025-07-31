@@ -9,8 +9,8 @@ import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    //screen settings
-    final int originalTileSize = 40;
+    //SCREEN SETTINGS
+    final int originalTileSize = 30;
     final int scale = 2;
 
     public int tileSize = originalTileSize * scale;
@@ -20,11 +20,18 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tileSize * maxScreenCol;
     public final int screenHeight = tileSize * maxScreenRow;
 
+    //WORLD MAP PARAMETERS
+    public final int maxWorldCol = 60;
+    public final int maxWorldRow = 60;
+    public  final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
+
+    //FPS
     final int fps = 60;
     KeyHandler keyHandler = new KeyHandler();
     Thread gameThread;
 
-    Player player = new Player(this, keyHandler);
+    public Player player = new Player(this, keyHandler);
 
     TileManager tileManager = new TileManager(this);
 
@@ -68,7 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             if (timer >= 1000000000) {
-               System.out.println("FPS" + drawCount);
+                System.out.println("FPS" + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -87,14 +94,14 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void paintComponent(Graphics g) {//called when repaint is invoked
-
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
+
         tileManager.draw(g2);
         player.draw(g);
 
-
+        Toolkit.getDefaultToolkit().sync();
         g2.dispose();
 
     }

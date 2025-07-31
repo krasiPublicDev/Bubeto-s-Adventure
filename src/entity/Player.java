@@ -15,6 +15,9 @@ public class Player extends Entity {
     KeyHandler keyHandler;
     private String lastDirection = "down";
 
+    public final int screenX;
+    public final int screenY;
+
     private final LinkedList<String> directionQueue = new LinkedList<>();
 
 
@@ -22,15 +25,18 @@ public class Player extends Entity {
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
 
+        screenX = gamePanel.screenWidth/2 - (gamePanel.tileSize/2);
+        screenY = gamePanel.screenHeight/2 - (gamePanel.tileSize/2);;
+
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues() {
 
-        x = 100;
-        y = 100;
-        speed = 6;
+        worldX = gamePanel.tileSize * 60;
+        worldY = gamePanel.tileSize * 34;
+        speed = 10;
         direction = "up";
     }
 
@@ -69,20 +75,20 @@ public class Player extends Entity {
             direction = dir;
             switch (dir) {
                 case "up" -> {
-                    y -= speed;
+                    worldY -= speed;
                     isMoving = true;
                     lastDirection = "up";
                 }
                 case "down" -> {
-                    y += speed;
+                    worldY += speed;
                     isMoving = true;
                 }
                 case "left" -> {
-                    x -= speed;
+                    worldX -= speed;
                     isMoving = true;
                 }
                 case "right" -> {
-                    x += speed;
+                    worldX += speed;
                     isMoving = true;
                 }
             }
@@ -98,24 +104,15 @@ public class Player extends Entity {
             } else {
                 spriteNumber = 1; // idle sprite
             }
-            } else {
-                switch (lastDirection) {
-                    case "up" -> direction = "upStatic";
-                    case "down" -> direction = "downStatic";
-                    case "left" -> direction = "leftStatic";
-                    case "right" -> direction = "rightStatic";
-                }
-                spriteNumber = 1;
+        } else {
+            switch (lastDirection) {
+                case "up" -> direction = "upStatic";
+                case "down" -> direction = "downStatic";
+                case "left" -> direction = "leftStatic";
+                case "right" -> direction = "rightStatic";
             }
-    }
-
-    public void pressDirection(String dir) {
-        directionQueue.remove(dir); // prevent duplicates
-        directionQueue.addFirst(dir); // newest has the hidghest priority
-    }
-
-    public void releaseDirection(String dir) {
-        directionQueue.remove(dir);
+            spriteNumber = 1;
+        }
     }
 
     public void draw(Graphics g2) {
@@ -165,7 +162,7 @@ public class Player extends Entity {
 
         }
 
-        g2.drawImage(image, x, y, gamePanel.playerSize, gamePanel.playerSize, null);
+        g2.drawImage(image, screenX, screenY, gamePanel.playerSize, gamePanel.playerSize, null);
 
     }
 
